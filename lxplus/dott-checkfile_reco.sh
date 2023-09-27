@@ -9,18 +9,19 @@ fi
 #
 MAXFILENO=100000
 #
-movetosubmit=${1:-0}
-runjobs=${2:-0}
+runjobs=${1:-0}
 
-PRIMARY="aodclus"
-# config="step3raw_RAW2DIGI_L1Reco_RECO_PAT_forcondor.py"
-# config="step3_RAW2DIGI_L1Reco_RECO_PAT_forcondor.py"
-config="step3raw_RAW2DIGI_L1Reco_RECO.py"
+PRIMARY="miniaod"
+# config="step3raw_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
+config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
+# PRIMARY="aodclus"
+# config="step3raw_RAW2DIGI_L1Reco_RECO.py" # RAW
+# config="step3_RAW2DIGI_L1Reco_RECO.py" #RAW prime
 
 INPUTS=(
-    # "../list/HIExpressRawPrime_374289.txt"
-    "../list/HIExpress_374289.txt"
-    # "../list/PhysicsHIPhysicsRawPrime0_374289.txt"
+    "../list/HIExpressRawPrime_374322.txt"
+    # "../list/HIExpress_374322.txt"
+    # "../list/PhysicsHIPhysicsRawPrime0_374322.txt"
 )
 
 OUTPUTPRIDIR="/eos/cms/store/group/phys_heavyions/wangj/RECO2023/"
@@ -60,15 +61,4 @@ do
     fi
 
 done
-
-if [ "$movetosubmit" -eq 1 ]
-then
-    # cd ../
-    # make transmute_trees || exit 1
-    # cd lxplus    
-    # mv -v ../transmute_trees $WORKDIR/
-
-    cp ../step3_RAW2DIGI_L1Reco_RECO_PAT_forcondor.py .
-    
-fi
 

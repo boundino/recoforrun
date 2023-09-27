@@ -5,7 +5,7 @@ pd=${2:-PhysicsHIPhysicsRawPrime0}
 t_run=${runnumber/"/"/""}
 echo $t_run
 outputfile=${pd}_${t_run}.txt
-rm $outputfile
+rm $outputfile 2> /dev/null 
 for i in `ls -d /eos/cms/store/t0streamer/Data/$pd/000/$runnumber/*`
 do
     echo "file:"$i >> $outputfile
