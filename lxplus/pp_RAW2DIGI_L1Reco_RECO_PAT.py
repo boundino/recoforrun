@@ -2,12 +2,12 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step3 --conditions 132X_dataRun3_Express_v4 -s RAW2DIGI,L1Reco,RECO,PAT --datatier MINIAOD --eventcontent MINIAOD --data --process reRECO --scenario pp --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run3 --no_exec --era Run3_pp_on_PbPb_approxSiStripClusters_2023 --repacked
+# with command line options: pp --conditions 132X_dataRun3_Express_v4 -s RAW2DIGI,L1Reco,RECO,PAT --datatier MINIAOD --eventcontent MINIAOD --data --process RECO --scenario pp --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run3 --no_exec --era Run3_2023 --repacked
 import FWCore.ParameterSet.Config as cms
 
-from Configuration.Eras.Era_Run3_pp_on_PbPb_approxSiStripClusters_2023_cff import Run3_pp_on_PbPb_approxSiStripClusters_2023
+from Configuration.Eras.Era_Run3_2023_cff import Run3_2023
 
-process = cms.Process('reRECO',Run3_pp_on_PbPb_approxSiStripClusters_2023)
+process = cms.Process('RECO',Run3_2023)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -30,14 +30,8 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 # Input source
-# process.source = cms.Source("PoolSource",
-#     fileNames = cms.untracked.vstring('file:step3_DIGI2RAW.root'),
-#     secondaryFileNames = cms.untracked.vstring()
-# )
-
 process.source = cms.Source("NewEventStreamFileReader",
-    fileNames = cms.untracked.vstring("file:/"),
-    # secondaryFileNames = cms.untracked.vstring()
+    fileNames = cms.untracked.vstring('file:/eos/cms/store/t0streamer/Data/PhysicsHIForward0/000/374/322/run374322_ls0087_streamPhysicsHIForward0_StorageManager.dat')
 )
 
 process.options = cms.untracked.PSet(
@@ -74,7 +68,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('step3 nevts:1'),
+    annotation = cms.untracked.string('pp nevts:1'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -91,7 +85,7 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     dropMetaData = cms.untracked.string('ALL'),
     eventAutoFlushCompressedSize = cms.untracked.int32(-900),
     fastCloning = cms.untracked.bool(False),
-    fileName = cms.untracked.string('/eos/cms/store/group/phys_heavyions/wangj/RECO2023/PhysicsHIPhysicsRawPrime0/374288/step3_RAW2DIGI_L1Reco_RECO_PAT.root'),
+    fileName = cms.untracked.string('pp_RAW2DIGI_L1Reco_RECO_PAT.root'),
     outputCommands = process.MINIAODEventContent.outputCommands,
     overrideBranchesSplitLevel = cms.untracked.VPSet(
         cms.untracked.PSet(
@@ -159,12 +153,11 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Express_v4', '')
 
 process.GlobalTag.toGet = cms.VPSet(
   cms.PSet(record = cms.string("HeavyIonRPRcd"),
-           tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
+	   tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
            label = cms.untracked.string(''),
            connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
            )
 )
-
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
@@ -243,7 +236,7 @@ process.es_pool = cms.ESSource("PoolDBESSource",
         )
     ),
     connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS'),
-        authenticationMethod = cms.untracked.uint32(1)
+	authenticationMethod = cms.untracked.uint32(1)
     )
 
 process.es_prefer = cms.ESPrefer('HcalTextCalibrations', 'es_ascii')
@@ -268,10 +261,28 @@ from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEar
 process = customiseEarlyDelete(process)
 # End adding early deletion
 
+# process.Trigger = cms.EDFilter( "TriggerResultsFilter",
+#       triggerConditions = cms.vstring(
+#           "HLT_HIUPC_SingleMuCosmic_BptxAND_MaxPixelCluster1000_v1",
+#           "HLT_HIUPC_SingleMuOpen_BptxAND_MaxPixelCluster1000_v1",
+#           "HLT_HIUPC_SingleMuOpen_OR_SingleMuCosmic_EMTF_BptxAND_MaxPixelCluster1000_v1",
+#           "HLT_HIUPC_DoubleMuOpen_BptxAND_MaxPixelCluster1000_v1",
+#           "HLT_HIUPC_DoubleMuCosmic_BptxAND_MaxPixelCluster1000_v1",
+#          ),
+#       hltResults = cms.InputTag( "TriggerResults", "", "HLT" ),
+#       l1tResults = cms.InputTag( "gtStage2Digis" ),
+#       l1tIgnoreMask = cms.bool( False ),
+#       l1techIgnorePrescales = cms.bool( True ),
+#       daqPartitions = cms.uint32( 1 ),
+#       throw = cms.bool( True )
+# )
+# for path in process.paths:
+#     getattr(process,path)._seq = process.Trigger * getattr(process,path)._seq
+
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
-ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/374/354/run374354_ls0046_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat'
-ivars.outputFile = 'step3_RAW2DIGI_L1Reco_RECO_PAT.root'
+ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIForward0/000/374/345/run374345_ls0025_streamPhysicsHIForward0_StorageManager.dat'
+ivars.outputFile = 'pp_RAW2DIGI_L1Reco_RECO_PAT.root'
 ivars.parseArguments() # get and parse the command line arguments
 process.source.fileNames = ivars.inputFiles
 process.MINIAODoutput.fileName = ivars.outputFile

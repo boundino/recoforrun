@@ -18,7 +18,9 @@ scram p CMSSW $RELEASE
 cd $RELEASE/src
 eval `scram runtime -sh`
 cp ../../$PYCONFIG .
+
 set -x
+cp /eos/cms/store/group/phys_heavyions/wangj/RECO2023/psets/emap_2023_newZDC_v3.txt .
 
 input_file=$INFILE
 

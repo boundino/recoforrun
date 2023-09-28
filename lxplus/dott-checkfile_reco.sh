@@ -7,21 +7,25 @@ then
 fi
 
 #
-MAXFILENO=100000
+MAXFILENO=10000000
 #
 runjobs=${1:-0}
 
 PRIMARY="miniaod"
 # config="step3raw_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
 config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
+# config="pp_RAW2DIGI_L1Reco_RECO_PAT.py" # Forward
 # PRIMARY="aodclus"
 # config="step3raw_RAW2DIGI_L1Reco_RECO.py" # RAW
-# config="step3_RAW2DIGI_L1Reco_RECO.py" #RAW prime
+# config="step3_RAW2DIGI_L1Reco_RECO.py" #RAW prim
+# PRIMARY="aod"
+# config="pp_RAW2DIGI_L1Reco_RECO.py" # Forward
 
 INPUTS=(
-    "../list/HIExpressRawPrime_374322.txt"
-    # "../list/HIExpress_374322.txt"
-    # "../list/PhysicsHIPhysicsRawPrime0_374322.txt"
+    # "../list/HIExpressRawPrime_374354.txt"
+    # "../list/HIExpress_374354.txt"
+    "../list/PhysicsHIPhysicsRawPrime0_374354.txt"
+    # "../list/PhysicsHIForward0_374354.txt"
 )
 
 OUTPUTPRIDIR="/eos/cms/store/group/phys_heavyions/wangj/RECO2023/"
