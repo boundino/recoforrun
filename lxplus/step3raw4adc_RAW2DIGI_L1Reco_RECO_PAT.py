@@ -2,12 +2,12 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: pp --conditions 132X_dataRun3_Express_v4 -s RAW2DIGI,L1Reco,RECO,PAT --datatier MINIAOD --eventcontent MINIAOD --data --process RECO --scenario pp --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run3 --no_exec --era Run3_2023 --repacked
+# with command line options: step3raw --conditions 132X_dataRun3_Express_v4 -s RAW2DIGI,L1Reco,RECO,PAT --datatier MINIAOD --eventcontent MINIAOD --data --process reRECO --scenario pp --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run3 --no_exec --era Run3_pp_on_PbPb_2023 --repacked
 import FWCore.ParameterSet.Config as cms
 
-from Configuration.Eras.Era_Run3_2023_cff import Run3_2023
+from Configuration.Eras.Era_Run3_pp_on_PbPb_2023_cff import Run3_pp_on_PbPb_2023
 
-process = cms.Process('RECO',Run3_2023)
+process = cms.Process('reRECO',Run3_pp_on_PbPb_2023)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -31,8 +31,9 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("NewEventStreamFileReader",
-    fileNames = cms.untracked.vstring('file:/eos/cms/store/t0streamer/Data/PhysicsHIForward0/000/374/322/run374322_ls0087_streamPhysicsHIForward0_StorageManager.dat')
+    fileNames = cms.untracked.vstring('file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/373/870/run373870_ls0037_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat')
 )
+
 
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
@@ -68,7 +69,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('pp nevts:1'),
+    annotation = cms.untracked.string('step3raw nevts:1'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -85,7 +86,7 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     dropMetaData = cms.untracked.string('ALL'),
     eventAutoFlushCompressedSize = cms.untracked.int32(-900),
     fastCloning = cms.untracked.bool(False),
-    fileName = cms.untracked.string('pp_RAW2DIGI_L1Reco_RECO_PAT.root'),
+    fileName = cms.untracked.string('step3raw_RAW2DIGI_L1Reco_RECO_PAT.root'),
     outputCommands = process.MINIAODEventContent.outputCommands,
     overrideBranchesSplitLevel = cms.untracked.VPSet(
         cms.untracked.PSet(
@@ -153,11 +154,12 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Express_v4', '')
 
 process.GlobalTag.toGet = cms.VPSet(
   cms.PSet(record = cms.string("HeavyIonRPRcd"),
-	   tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
+           tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
            label = cms.untracked.string(''),
            connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
            )
 )
+
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
@@ -206,6 +208,31 @@ MassReplaceInputTag(process, new="rawDataMapperByLabel", old="rawDataCollector")
 
 # customisation of the process.
 
+from CondCore.CondDB.CondDB_cfi import *
+process.es_pool = cms.ESSource("PoolDBESSource",
+    timetype = cms.string('runnumber'),
+    toGet = cms.VPSet(
+        cms.PSet(
+            record = cms.string("HcalElectronicsMapRcd"),
+            tag = cms.string("HcalElectronicsMap_2021_v2.0_data")
+        )
+    ),
+    connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS'),
+        authenticationMethod = cms.untracked.uint32(1)
+    )
+
+process.es_prefer = cms.ESPrefer('HcalTextCalibrations', 'es_ascii')
+process.es_ascii = cms.ESSource(
+    'HcalTextCalibrations',
+    input = cms.VPSet(
+        cms.PSet(
+            object = cms.string('ElectronicsMap'),
+            file = cms.FileInPath("emap_2023_newZDC_v3.txt")
+        )
+    )
+)
+process.MINIAODoutput.outputCommands += ['keep QIE10DataFrameHcalDataFrameContainer_hcalDigis_*_*']
+
 # Automatic addition of the customisation function from Configuration.DataProcessing.RecoTLR
 from Configuration.DataProcessing.RecoTLR import customisePostEra_Run3 
 
@@ -226,33 +253,6 @@ process = miniAOD_customizeAllData(process)
 
 # Customisation from command line
 
-from CondCore.CondDB.CondDB_cfi import *
-process.es_pool = cms.ESSource("PoolDBESSource",
-    timetype = cms.string('runnumber'),
-    toGet = cms.VPSet(
-        cms.PSet(
-            record = cms.string("HcalElectronicsMapRcd"),
-            tag = cms.string("HcalElectronicsMap_2021_v2.0_data")
-        )
-    ),
-    connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS'),
-	authenticationMethod = cms.untracked.uint32(1)
-    )
-
-process.es_prefer = cms.ESPrefer('HcalTextCalibrations', 'es_ascii')
-process.es_ascii = cms.ESSource(
-    'HcalTextCalibrations',
-    input = cms.VPSet(
-        cms.PSet(
-            object = cms.string('ElectronicsMap'),
-            file = cms.FileInPath("emap_2023_newZDC_v3.txt")
-        )
-    )
-)
-
-process.MINIAODoutput.outputCommands += ['keep QIE10DataFrameHcalDataFrameContainer_hcalDigis_ZDC_*']
-process.slimmedCaloJets.cut = cms.string('pt>5')
-
 #Have logErrorHarvester wait for the same EDProducers to finish as those providing data for the OutputModule
 from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
 process = customiseLogErrorHarvesterUsingOutputCommands(process)
@@ -264,11 +264,7 @@ process = customiseEarlyDelete(process)
 
 # process.Trigger = cms.EDFilter( "TriggerResultsFilter",
 #       triggerConditions = cms.vstring(
-#           "HLT_HIUPC_SingleMuCosmic_BptxAND_MaxPixelCluster1000_v1",
-#           "HLT_HIUPC_SingleMuOpen_BptxAND_MaxPixelCluster1000_v1",
-#           "HLT_HIUPC_SingleMuOpen_OR_SingleMuCosmic_EMTF_BptxAND_MaxPixelCluster1000_v1",
-#           "HLT_HIUPC_DoubleMuOpen_BptxAND_MaxPixelCluster1000_v1",
-#           "HLT_HIUPC_DoubleMuCosmic_BptxAND_MaxPixelCluster1000_v1",
+#         "HLT_HIZeroBias_HighRate_v2"
 #          ),
 #       hltResults = cms.InputTag( "TriggerResults", "", "HLT" ),
 #       l1tResults = cms.InputTag( "gtStage2Digis" ),
@@ -280,10 +276,15 @@ process = customiseEarlyDelete(process)
 # for path in process.paths:
 #     getattr(process,path)._seq = process.Trigger * getattr(process,path)._seq
 
+
+
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
-ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIForward0/000/374/345/run374345_ls0025_streamPhysicsHIForward0_StorageManager.dat'
-ivars.outputFile = 'pp_RAW2DIGI_L1Reco_RECO_PAT.root'
+ivars.maxEvents = -1
+ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIForward0/000/374/596/run374596_ls0100_streamPhysicsHIForward0_StorageManager.dat'
+ivars.outputFile = 'step3_RAW2DIGI_L1Reco_RECO_PAT.root'
 ivars.parseArguments() # get and parse the command line arguments
 process.source.fileNames = ivars.inputFiles
 process.MINIAODoutput.fileName = ivars.outputFile
+process.maxEvents.input = cms.untracked.int32(ivars.maxEvents)
+
