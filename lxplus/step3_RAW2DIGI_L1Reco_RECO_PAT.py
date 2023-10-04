@@ -155,16 +155,37 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Express_v4', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Prompt_v4', '')
 
-process.GlobalTag.toGet = cms.VPSet(
-  cms.PSet(record = cms.string("HeavyIonRPRcd"),
-           tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
-           label = cms.untracked.string(''),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-           )
+# process.GlobalTag.toGet = cms.VPSet(
+#   cms.PSet(record = cms.string("HeavyIonRPRcd"),
+#            tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
+#            label = cms.untracked.string(''),
+#            connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
+#            )
+# )
+from CondCore.CondDB.CondDB_cfi import *
+process.es_pool = cms.ESSource("PoolDBESSource",
+    timetype = cms.string('runnumber'),
+    toGet = cms.VPSet(
+        cms.PSet(
+            record = cms.string("HcalElectronicsMapRcd"),
+            tag = cms.string("HcalElectronicsMap_2021_v2.0_data")
+        )
+    ),
+    connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS'),
+        authenticationMethod = cms.untracked.uint32(1)
+    )
+process.es_prefer = cms.ESPrefer('HcalTextCalibrations', 'es_ascii')
+process.es_ascii = cms.ESSource(
+    'HcalTextCalibrations',
+    input = cms.VPSet(
+        cms.PSet(
+            object = cms.string('ElectronicsMap'),
+            file = cms.FileInPath("emap_2023_newZDC_v3.txt")
+        )
+    )
 )
-
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
@@ -233,30 +254,6 @@ process = miniAOD_customizeAllData(process)
 
 # Customisation from command line
 
-from CondCore.CondDB.CondDB_cfi import *
-process.es_pool = cms.ESSource("PoolDBESSource",
-    timetype = cms.string('runnumber'),
-    toGet = cms.VPSet(
-        cms.PSet(
-            record = cms.string("HcalElectronicsMapRcd"),
-            tag = cms.string("HcalElectronicsMap_2021_v2.0_data")
-        )
-    ),
-    connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS'),
-        authenticationMethod = cms.untracked.uint32(1)
-    )
-
-process.es_prefer = cms.ESPrefer('HcalTextCalibrations', 'es_ascii')
-process.es_ascii = cms.ESSource(
-    'HcalTextCalibrations',
-    input = cms.VPSet(
-        cms.PSet(
-            object = cms.string('ElectronicsMap'),
-            file = cms.FileInPath("emap_2023_newZDC_v3.txt")
-        )
-    )
-)
-
 #Have logErrorHarvester wait for the same EDProducers to finish as those providing data for the OutputModule
 from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
 process = customiseLogErrorHarvesterUsingOutputCommands(process)
@@ -268,7 +265,7 @@ process = customiseEarlyDelete(process)
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
-ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/374/354/run374354_ls0046_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat'
+ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/374/719/run374719_ls0100_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat'
 ivars.outputFile = 'step3_RAW2DIGI_L1Reco_RECO_PAT.root'
 ivars.parseArguments() # get and parse the command line arguments
 process.source.fileNames = ivars.inputFiles

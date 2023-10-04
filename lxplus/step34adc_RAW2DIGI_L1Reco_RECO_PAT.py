@@ -25,7 +25,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1),
+    input = cms.untracked.int32(100),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
@@ -155,16 +155,15 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Express_v4', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Prompt_v4', '')
 
-process.GlobalTag.toGet = cms.VPSet(
-  cms.PSet(record = cms.string("HeavyIonRPRcd"),
-           tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
-           label = cms.untracked.string(''),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-           )
-)
-
+# process.GlobalTag.toGet = cms.VPSet(
+#   cms.PSet(record = cms.string("HeavyIonRPRcd"),
+#            tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
+#            label = cms.untracked.string(''),
+#            connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
+#            )
+# )
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
@@ -203,7 +202,33 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadPFMuonDzFilter,process.Flag_hfNoisyHitsFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.endjob_step,process.MINIAODoutput_step)
+process.triggerSelection = cms.EDFilter("TriggerResultsFilter",
+    triggerConditions = cms.vstring(
+        # 'HLT_HIZeroBias_v10',   # Example HLT path
+        'HLT_HIMinimumBiasHF1ANDZDC2nOR_v3',
+    ),
+    hltResults = cms.InputTag("TriggerResults", "", "HLT"),
+    l1tResults = cms.InputTag(""),
+    throw = cms.bool(False)
+)
+process.filterSequence = cms.Sequence(
+    process.triggerSelection
+    # process.filterPath
+)
+process.filterPath = cms.Path(process.triggerSelection)
+
+# from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+# process.hltfilter = hltHighLevel.clone(
+#     HLTPaths = [
+#         "HLT_HIZeroBias_v*",                                                                                                                                                                                  
+#         #"HLT_HIMinimumBias_v*",
+#     ]
+# )
+
+# process.superFilterPath = cms.Path(process.filterSequence)
+# process.skimanalysis.superFilters = cms.vstring("superFilterPath")
+
+process.schedule = cms.Schedule(process.filterPath,process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadPFMuonDzFilter,process.Flag_hfNoisyHitsFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.endjob_step,process.MINIAODoutput_step)
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
@@ -222,6 +247,8 @@ process = customisePostEra_Run3(process)
 # End of customisation functions
 
 # customisation of the process.
+for path in process.paths:
+    getattr(process, path)._seq = process.filterSequence * getattr(process,path)._seq
 
 # Automatic addition of the customisation function from PhysicsTools.PatAlgos.slimming.miniAOD_tools
 from PhysicsTools.PatAlgos.slimming.miniAOD_tools import miniAOD_customizeAllData 
@@ -232,7 +259,7 @@ process = miniAOD_customizeAllData(process)
 # End of customisation functions
 
 # Customisation from command line
-
+# process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 from CondCore.CondDB.CondDB_cfi import *
 process.es_pool = cms.ESSource("PoolDBESSource",
     timetype = cms.string('runnumber'),
@@ -256,7 +283,9 @@ process.es_ascii = cms.ESSource(
         )
     )
 )
+
 process.MINIAODoutput.outputCommands += ['keep QIE10DataFrameHcalDataFrameContainer_hcalDigis_*_*']
+process.MINIAODoutput.SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('filterPath'))
 
 #Have logErrorHarvester wait for the same EDProducers to finish as those providing data for the OutputModule
 from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
@@ -269,7 +298,7 @@ process = customiseEarlyDelete(process)
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
-ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/374/596/run374596_ls0274_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat'
+ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/374/719/run374719_ls0100_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat'
 ivars.outputFile = 'step3_RAW2DIGI_L1Reco_RECO_PAT.root'
 ivars.parseArguments() # get and parse the command line arguments
 process.source.fileNames = ivars.inputFiles

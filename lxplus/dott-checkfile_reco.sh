@@ -12,8 +12,8 @@ MAXFILENO=10000000
 runjobs=${1:-0}
 
 PRIMARY="miniaod"
-config="step3raw4adc_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
-# config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
+# config="step3raw4adc_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
+config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
 # config="pp_RAW2DIGI_L1Reco_RECO_PAT.py" # Forward
 
 # PRIMARY="aodclus"
@@ -25,8 +25,8 @@ config="step3raw4adc_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
 INPUTS=(
     # "../list/HIExpressRawPrime_374416.txt"
     # "../list/HIExpress_374416.txt"
-    # "../list/PhysicsHIPhysicsRawPrime0_374416.txt"
-    "../list/PhysicsHIForward1_374596.txt"
+    "../list/PhysicsHIPhysicsRawPrime2_374719.txt"
+    # "../list/PhysicsHIForward1_374596.txt"
     # "../list/PhysicsHIZeroBias1_374588.txt"
 )
 
