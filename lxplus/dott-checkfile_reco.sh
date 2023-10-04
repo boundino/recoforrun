@@ -12,9 +12,10 @@ MAXFILENO=10000000
 runjobs=${1:-0}
 
 PRIMARY="miniaod"
-# config="step3raw_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
-config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
+config="step3raw4adc_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
+# config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
 # config="pp_RAW2DIGI_L1Reco_RECO_PAT.py" # Forward
+
 # PRIMARY="aodclus"
 # config="step3raw_RAW2DIGI_L1Reco_RECO.py" # RAW
 # config="step3_RAW2DIGI_L1Reco_RECO.py" #RAW prim
@@ -22,10 +23,11 @@ config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
 # config="pp_RAW2DIGI_L1Reco_RECO.py" # Forward
 
 INPUTS=(
-    # "../list/HIExpressRawPrime_374354.txt"
-    # "../list/HIExpress_374354.txt"
-    "../list/PhysicsHIPhysicsRawPrime0_374354.txt"
-    # "../list/PhysicsHIForward0_374354.txt"
+    # "../list/HIExpressRawPrime_374416.txt"
+    # "../list/HIExpress_374416.txt"
+    # "../list/PhysicsHIPhysicsRawPrime0_374416.txt"
+    "../list/PhysicsHIForward1_374596.txt"
+    # "../list/PhysicsHIZeroBias1_374588.txt"
 )
 
 OUTPUTPRIDIR="/eos/cms/store/group/phys_heavyions/wangj/RECO2023/"
