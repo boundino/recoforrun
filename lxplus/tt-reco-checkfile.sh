@@ -9,7 +9,7 @@ INFILE=$1
 DESTINATION=$2
 OUTFILE=$3
 PYCONFIG=$4
-RELEASE=CMSSW_13_2_4
+RELEASE=CMSSW_13_2_5_patch1
 
 echo $SCRAM_ARCH
 
@@ -19,7 +19,6 @@ cd $RELEASE/src
 eval `scram runtime -sh`
 cp ../../$PYCONFIG .
 
-set -x
 cp /eos/cms/store/group/phys_heavyions/wangj/RECO2023/psets/emap_2023_newZDC_v3.txt .
 
 input_file=$INFILE
@@ -35,7 +34,6 @@ if [[ $(wc -c $OUTFILE | awk '{print $1}') -gt 700 ]]; then
     SRM_PREFIX="/eos/cms/" ; SRM_PATH=${DESTINATION#${SRM_PREFIX}} ;
     xrdcp ${OUTFILE} root://eoscms.cern.ch//${SRM_PATH}/$OUTFILE
 fi
-set +x
 
 cd ../../
 rm -rf $RELEASE

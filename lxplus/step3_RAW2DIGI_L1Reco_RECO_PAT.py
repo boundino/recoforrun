@@ -224,6 +224,21 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
 # Schedule definition
+process.triggerSelection = cms.EDFilter("TriggerResultsFilter",
+    triggerConditions = cms.vstring(
+        # 'HLT_HIZeroBias_HighRate_v3',   # Example HLT path
+        'HLT_HIMinimumBiasHF1ANDZDC1nOR_v1',
+    ),
+    hltResults = cms.InputTag("TriggerResults", "", "HLT"),
+    l1tResults = cms.InputTag(""),
+    throw = cms.bool(False)
+)
+process.filterSequence = cms.Sequence(
+    process.triggerSelection
+)
+process.filterPath = cms.Path(process.triggerSelection)
+process.MINIAODoutput.SelectEvents = cms.untracked.PSet(SelectEvents = cms.vstring('filterPath'))
+
 process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadPFMuonDzFilter,process.Flag_hfNoisyHitsFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.endjob_step,process.MINIAODoutput_step)
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
@@ -263,6 +278,9 @@ from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEar
 process = customiseEarlyDelete(process)
 # End adding early deletion
 
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
 ivars.inputFiles = 'file:/eos/cms/store/t0streamer/Data/PhysicsHIPhysicsRawPrime0/000/374/719/run374719_ls0100_streamPhysicsHIPhysicsRawPrime0_StorageManager.dat'
@@ -270,3 +288,4 @@ ivars.outputFile = 'step3_RAW2DIGI_L1Reco_RECO_PAT.root'
 ivars.parseArguments() # get and parse the command line arguments
 process.source.fileNames = ivars.inputFiles
 process.MINIAODoutput.fileName = ivars.outputFile
+

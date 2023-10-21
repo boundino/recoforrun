@@ -12,8 +12,11 @@ MAXFILENO=10000000
 runjobs=${1:-0}
 
 PRIMARY="miniaod"
+tag="_ZB"
+config="step34adc_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
 # config="step3raw4adc_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW
-config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
+# tag=""
+# config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
 # config="pp_RAW2DIGI_L1Reco_RECO_PAT.py" # Forward
 
 # PRIMARY="aodclus"
@@ -25,7 +28,7 @@ config="step3_RAW2DIGI_L1Reco_RECO_PAT.py" # RAW prime
 INPUTS=(
     # "../list/HIExpressRawPrime_374416.txt"
     # "../list/HIExpress_374416.txt"
-    "../list/PhysicsHIPhysicsRawPrime2_374719.txt"
+    "../list/PhysicsHIPhysicsRawPrime2_375055.txt"
     # "../list/PhysicsHIForward1_374596.txt"
     # "../list/PhysicsHIZeroBias1_374588.txt"
 )
@@ -50,7 +53,7 @@ do
     fi
     echo "$INPUTFILELIST"
     REQUESTNAME=${INPUTFILELIST##*/} ; REQUESTNAME=${REQUESTNAME%%.txt} ;
-    OUTPUTSUBDIR="${PRIMARY}_${REQUESTNAME}"
+    OUTPUTSUBDIR="${PRIMARY}_${REQUESTNAME}${tag}"
 
     ##
     OUTPUTDIR="${OUTPUTPRIDIR}/${OUTPUTSUBDIR}"
