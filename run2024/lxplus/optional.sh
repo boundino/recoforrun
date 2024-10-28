@@ -6,8 +6,16 @@ INPUT0=(
 )
 
 config=$1
-index=${2:-0}
-[[ $config == *.py && $index =~ [012] ]] || exit 1
+[[ $config == *.py ]] || { echo "error: bad config: ./optional.sh [config.py]" ; exit 1 ; }
+index=$2
+[[ x$index == x ]] && {
+    [[ $config == *prime* ]] && index=1 || {
+            [[ $config == *PbPb* ]] && index=2 || {
+                    [[ $config == *pp* ]] && index=0 
+                }
+        }
+}
+[[ $index =~ [012] ]] || { echo "error: bad index." ; exit 1 ; }
 
 IFS=':' ; inputs=(${INPUT0[index]}) ; unset IFS
 PD0=${inputs[0]}
@@ -67,8 +75,8 @@ process.maxEvents.input = cms.untracked.int32(ivars.maxEvents)
 
 ##
 
-echo "add HLT filter..."
 temp_file=$(mktemp)
+# add HLT filter
 {
     while IFS= read -r line; do
         if [[ "$line" == *"# Schedule definition"* ]]; then
@@ -78,10 +86,10 @@ temp_file=$(mktemp)
     done < $config
 } > $temp_file
 sed -i 's/Schedule(process.raw2digi_step/Schedule(process.filterPath,process.raw2digi_step/g' $temp_file
-
-echo "add stream reader, hcaldigis, messenger, parameter helper..."
+# add other helpers
 echo "$STREAMER$HCALDIGI$MESSENGER$ARGU" >> $temp_file
 
-mv "$temp_file" tmp.py
+diff $config $temp_file
+mv -v $temp_file $config
 
 echo "done"
