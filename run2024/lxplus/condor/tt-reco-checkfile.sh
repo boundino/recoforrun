@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $# -ne 4 ]]; then
-    echo "usage: ./tt-tracklet-checkfile.sh [input file] [output dir] [output filename] [random] [split]"
+    echo "usage: ./tt-reco-checkfile.sh [input file] [output dir] [output filename] [python config]"
     exit 1
 fi
 
@@ -9,7 +9,7 @@ INFILE=$1
 DESTINATION=$2
 OUTFILE=$3
 PYCONFIG=$4
-RELEASE=CMSSW_13_2_5_patch1
+RELEASE=CMSSW_14_1_4_patch2
 
 echo $SCRAM_ARCH
 
@@ -18,10 +18,6 @@ scram p CMSSW $RELEASE
 cd $RELEASE/src
 eval `scram runtime -sh`
 cp ../../$PYCONFIG .
-
-cp /eos/cms/store/group/phys_heavyions/wangj/RECO2023/psets/emap_2023_newZDC_v3.txt .
-
-input_file=$INFILE
 
 cmsRun $PYCONFIG inputFiles=$INFILE outputFile=$OUTFILE
 
