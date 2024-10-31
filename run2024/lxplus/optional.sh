@@ -1,6 +1,6 @@
 
 INPUT0=(
-    'PhysicsPPRefZeroBiasPlusForward0:387396:HLT_PPRefZeroBias_v6:ppRef RAW'
+    'PhysicsPPRefZeroBiasPlusForward0:387474:HLT_PPRefZeroBias_v6:ppRef RAW'
     'PhysicsHIPhysicsRawPrime0:387439:HLT_HIZeroBias_HighRate_v7:PbPb RAW prime'
     'PhysicsHIZeroBiasRAW0:387439:HLT_HIZeroBias_HighRateRAW_v4:PbPb RAW'
 )
@@ -22,7 +22,7 @@ PD0=${inputs[0]}
 RUN0=${inputs[1]}
 HLT0=${inputs[2]}
 tag=${inputs[3]}
-LS0='0051'
+LS0='0055'
 FILE0=/store/t0streamer/Data/$PD0/000/"${RUN0:0:3}/${RUN0:3:3}"/run${RUN0}_ls${LS0}_stream${PD0}_StorageManager.dat
 echo -e "\e[32m["$tag"]\e[0m \e[32;2m"$HLT0 $FILE0"\e[0m"
 
