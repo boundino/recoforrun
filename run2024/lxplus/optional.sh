@@ -26,7 +26,7 @@ LS0='0055'
 FILE0=/store/t0streamer/Data/$PD0/000/"${RUN0:0:3}/${RUN0:3:3}"/run${RUN0}_ls${LS0}_stream${PD0}_StorageManager.dat
 echo -e "\e[32m["$tag"]\e[0m \e[32;2m"$HLT0 $FILE0"\e[0m"
 
-ls /eos/cms/$FILE0 || exit 1
+ls /eos/cms/$FILE0 # || exit 1
 OUT0=/eos/cms/store/group/phys_heavyions/wangj/RECO2024/miniaod_${PD0}_${RUN0}_ls${LS0}.root
 
 STREAMER='
@@ -90,7 +90,7 @@ sed -i 's/Schedule(process.raw2digi_step/Schedule(process.filterPath,process.raw
 # add other helpers
 echo "$STREAMER$HCALDIGI$MESSENGER$ARGU" >> $temp_file
 
-diff $config $temp_file
+diff $config $temp_file --report-identical-files --old-group-format=$'\e[38;2;210;106;112m%<\e[0m' --new-group-format=$'\e[38;2;132;192;127m%>\e[0m' --unchanged-group-format=$'\e[38;2;128;128;128m%=\e[0m'
 mv -v $temp_file $config
 
 echo "done"

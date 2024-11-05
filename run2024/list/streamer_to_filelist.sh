@@ -1,5 +1,5 @@
-runnumber=$1 # 375xxx
-pd=${2:-PhysicsHIPhysicsRawPrime0}
+runnumber=$1 
+pd=${2:-PhysicsPPRefZeroBiasPlusForward0}
 
 [[ $runnumber =~ ^[0-9]{6}$ ]] && {
 
@@ -12,6 +12,8 @@ pd=${2:-PhysicsHIPhysicsRawPrime0}
         echo "file:"$i >> $outputfile
     done
     # # mkdir -p /eos/cms/store/group/phys_heavyions/wangj/RECO2023/$pd/$t_run
+    echo list/$outputfile
+    # less $outputfile
 } || {
     echo "usage: ./streamer_to_filelist.sh [run number] [stream name]"
     echo "example: ./streamer_to_filelist.sh 375549 PhysicsHIPhysicsRawPrime0"

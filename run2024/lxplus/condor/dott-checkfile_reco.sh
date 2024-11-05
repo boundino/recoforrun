@@ -20,9 +20,10 @@ PRIMARY="miniaod" # event content
 config="recoppraw2mini_RAW2DIGI_L1Reco_RECO_PAT.py"
 
 INPUTS=(
-    # list/PhysicsPPRefZeroBiasPlusForward0_387474.txt
-    # list/PhysicsPPRefHardProbes0_387474.txt
-    # list/PhysicsPPRefDoubleMuon0_387474.txt
+    # list/PhysicsPPRefZeroBiasPlusForward0_387590.txt
+    list/PhysicsPPRefHardProbes0_387607.txt
+    # list/PhysicsPPRefDoubleMuon0_387607.txt
+    # list/PhysicsPPRefSingleMuon0_387590.txt
 )
 
 # 
