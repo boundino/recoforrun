@@ -1,8 +1,8 @@
 
 INPUT0=(
     'PhysicsPPRefZeroBiasPlusForward0:387474:HLT_PPRefZeroBias_v6:ppRef RAW'
-    'PhysicsHIPhysicsRawPrime0:387439:HLT_HIZeroBias_HighRate_v7:PbPb RAW prime'
-    'PhysicsHIZeroBiasRAW0:387439:HLT_HIZeroBias_HighRateRAW_v4:PbPb RAW'
+    'PhysicsHIPhysicsRawPrime0:387757:HLT_HIZeroBias_HighRate_v7:PbPb RAW prime'
+    'PhysicsHIZeroBiasRAW0:387757:HLT_HIZeroBias_HighRateRAW_v4:PbPb RAW'
 )
 
 config=$1
@@ -39,8 +39,8 @@ HLT='
 #
 process.triggerSelection = cms.EDFilter("TriggerResultsFilter",
     triggerConditions = cms.vstring(
-        # "*",
-	"'$HLT0'",   # Example HLT path
+        "*",
+	# "'$HLT0'",
     ),
     hltResults = cms.InputTag("TriggerResults", "", "HLT"),
     l1tResults = cms.InputTag(""),
@@ -60,7 +60,7 @@ for path in process.paths:
 
 MESSENGER='
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
-# process.MessageLogger.suppressWarning = cms.untracked.vstring("hiPuRho", "akPu4CaloJets", "ak4CaloJetsForTrk", "ak4CaloJetsForTrkPreSplitting")
+# process.MessageLogger.suppressWarning = cms.untracked.vstring("hiPuRho", "akPu4CaloJets", "ak4CaloJetsForTrk", "ak4CaloJetsForTrkPreSplitting", "toomanystripclus53X", "manystripclus53X")
 '
 ARGU='
 import FWCore.ParameterSet.VarParsing as VarParsing
