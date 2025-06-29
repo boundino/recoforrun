@@ -11,19 +11,44 @@ then
 fi
 
 #
-MAXFILENO=10000000
+MAXFILENO=100000
 #
 runjobs=${1:-0}
 
 PRIMARY="miniaod" # event content
-# tag="_ZB" # hlt filter
-config="recoppraw2mini_RAW2DIGI_L1Reco_RECO_PAT.py"
+tag="_HLT_HIPhysics_v14" # hlt filter
+config="recoPbPbprime2mini_RAW2DIGI_L1Reco_RECO_PAT_2.py"
+# config="recoUPCraw2miniaod_RAW2DIGI_L1Reco_RECO_PAT.py"
 
 INPUTS=(
     # list/PhysicsPPRefZeroBiasPlusForward0_387590.txt
-    list/PhysicsPPRefHardProbes0_387607.txt
+    # list/PhysicsPPRefHardProbes0_387607.txt
     # list/PhysicsPPRefDoubleMuon0_387607.txt
     # list/PhysicsPPRefSingleMuon0_387590.txt
+    # list/PhysicsHIPhysicsRawPrime0_388095.txt
+    # list/PhysicsHIForward0_388353.txt
+    list/HIExpressRawPrime_388769.txt
+    # list/PhysicsHIPhysicsRawPrime0_388306.txt
+    # list/PhysicsHIPhysicsRawPrime40_388095.txt
+    # list/PhysicsHIPhysicsRawPrime41_388095.txt
+    # list/PhysicsHIPhysicsRawPrime42_388095.txt
+    # list/PhysicsHIPhysicsRawPrime43_388095.txt
+    # list/PhysicsHIPhysicsRawPrime44_388095.txt
+    # list/PhysicsHIPhysicsRawPrime45_388095.txt
+    # list/PhysicsHIPhysicsRawPrime46_388095.txt
+    # list/PhysicsHIPhysicsRawPrime47_388095.txt
+    # list/PhysicsHIPhysicsRawPrime48_388095.txt
+    # list/PhysicsHIPhysicsRawPrime49_388095.txt
+    # list/PhysicsHIPhysicsRawPrime50_388095.txt
+    # list/PhysicsHIPhysicsRawPrime51_388095.txt
+    # list/PhysicsHIPhysicsRawPrime52_388095.txt
+    # list/PhysicsHIPhysicsRawPrime53_388095.txt
+    # list/PhysicsHIPhysicsRawPrime54_388095.txt
+    # list/PhysicsHIPhysicsRawPrime55_388095.txt
+    # list/PhysicsHIPhysicsRawPrime56_388095.txt
+    # list/PhysicsHIPhysicsRawPrime57_388095.txt
+    # list/PhysicsHIPhysicsRawPrime58_388095.txt
+    # list/PhysicsHIPhysicsRawPrime59_388095.txt
 )
 
 # 

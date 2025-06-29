@@ -10,7 +10,7 @@
         ls=${ls%%_stream*}
         ls=`echo $ls | sed -E 's/^(0)+//'`
 
-        [[ $ls -lt $2 || $ls -gt $3 ]] && continue
+        [[ $ls -gt $2 && $ls -lt $3 ]] && continue
         
         echo $i >> $tmp_file
     done

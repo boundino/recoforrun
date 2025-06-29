@@ -62,6 +62,17 @@ MESSENGER='
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 # process.MessageLogger.suppressWarning = cms.untracked.vstring("hiPuRho", "akPu4CaloJets", "ak4CaloJetsForTrk", "ak4CaloJetsForTrkPreSplitting", "toomanystripclus53X", "manystripclus53X")
 '
+
+MODIFY='
+# process.GlobalTag.toGet = cms.VPSet(
+#   cms.PSet(record = cms.string("HeavyIonRPRcd"),
+#            tag = cms.string("HeavyIonRPRcd_75x_v0_prompt"),
+#            label = cms.untracked.string(''),
+#            connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
+#            )
+# )
+'
+
 ARGU='
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing("analysis")
@@ -88,7 +99,7 @@ temp_file=$(mktemp)
 } > $temp_file
 sed -i 's/Schedule(process.raw2digi_step/Schedule(process.filterPath,process.raw2digi_step/g' $temp_file
 # add other helpers
-echo "$STREAMER$HCALDIGI$MESSENGER$ARGU" >> $temp_file
+echo "$STREAMER$HCALDIGI$MESSENGER$MODIFY$ARGU" >> $temp_file
 
 diff $config $temp_file --report-identical-files --old-group-format=$'\e[38;2;210;106;112m%<\e[0m' --new-group-format=$'\e[38;2;132;192;127m%>\e[0m' --unchanged-group-format=$'\e[38;2;128;128;128m%=\e[0m'
 mv -v $temp_file $config

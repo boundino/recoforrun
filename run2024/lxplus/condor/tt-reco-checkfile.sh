@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# -ne 4 ]]; then
-    echo "usage: ./tt-reco-checkfile.sh [input file] [output dir] [output filename] [python config]"
+if [[ $# -ne 5 ]]; then
+    echo "usage: ./tt-reco-checkfile.sh [input file] [output dir] [output filename] [python config] [cmssw release]"
     exit 1
 fi
 
@@ -9,7 +9,7 @@ INFILE=$1
 DESTINATION=$2
 OUTFILE=$3
 PYCONFIG=$4
-RELEASE=CMSSW_14_1_4_patch2
+RELEASE=$5
 
 echo $SCRAM_ARCH
 
