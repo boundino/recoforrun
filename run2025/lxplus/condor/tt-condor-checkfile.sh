@@ -18,14 +18,13 @@ PROXYFILE=$HOME/$(ls $HOME -lt | grep $USER | grep -m 1 x509 | awk '{print $NF}'
 
 tag="reco"
 
+set -x
 DEST_CONDOR=${DESTINATION}
+DEST_MUON=${DESTINATION%%/}_muon
 
-if [ ! -d $DESTINATION ]
-then
-    mkdir -p $DESTINATION
-fi
+mkdir -p $DESTINATION $DEST_MUON $LOGDIR
 
-mkdir -p $LOGDIR
+set +x
 
 counter=0
 for i in `cat $FILELIST`
@@ -48,7 +47,7 @@ Universe     = vanilla
 Initialdir   = $PWD/
 Notification = Error
 Executable   = $PWD/tt-${tag}-checkfile.sh
-Arguments    = $inputname $DEST_CONDOR ${outputfile} $PYCONFIG CMSSW_15_0_9
+Arguments    = $inputname $DEST_CONDOR ${outputfile} $PYCONFIG $CMSSW_VERSION $DEST_MUON
 Output       = $LOGDIR/log-${infn}.out
 Error        = $LOGDIR/log-${infn}.err
 Log          = $LOGDIR/log-${infn}.log

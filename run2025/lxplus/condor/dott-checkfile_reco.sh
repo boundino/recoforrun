@@ -16,14 +16,17 @@ MAXFILENO=1000000
 runjobs=${1:-0}
 
 PRIMARY="miniaod" # event content
-# tag="_HLT_HIPhysics_v14" # hlt filter
-config="reco2miniaod_RAW2DIGI_L1Reco_RECO_PAT.py"
+tag="_Prompt_v3" # hlt filter
+# config="reco2miniaod_RAW2DIGI_L1Reco_RECO_PAT.py"
+config="reco2miniaod_RAW2DIGI_L1Reco_RECO_PAT_SKIM_prompt.py"
 
 INPUTS=(
-    list/PhysicsIonPhysics0_393846.txt
-    # list/PhysicsPPRefZeroBiasPlusForward0_387590.txt
-    # list/HIExpressRawPrime_388769.txt
-    # list/PhysicsHIPhysicsRawPrime0_388306.txt
+    list/PhysicsIonPhysics0_394153.txt
+    # list/PhysicsIonPhysics2_394153.txt
+    # list/PhysicsIonPhysics4_394153.txt
+    # list/PhysicsIonPhysics6_394153.txt
+    # list/PhysicsIonPhysics8_394153.txt
+    # list/PhysicsIonPhysics10_394153.txt
 )
 
 # 
