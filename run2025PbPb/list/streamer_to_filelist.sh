@@ -13,6 +13,7 @@ pd=${2:-PhysicsSpecialHLTPhysics0}
     done
     # # mkdir -p /eos/cms/store/group/phys_heavyions/wangj/RECO2023/$pd/$t_run
     echo list/$outputfile
+    echo $outputfile
     # less $outputfile
 } || {
     echo "usage: ./streamer_to_filelist.sh [run number] [stream name]"

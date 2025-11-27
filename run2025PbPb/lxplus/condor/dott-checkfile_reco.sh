@@ -16,21 +16,22 @@ MAXFILENO=1000000
 runjobs=${1:-0}
 
 PRIMARY="miniaod" # event content
-tag="_express_v0" # hlt filter
-config="ppreco2miniaod_RAW2DIGI_L1Reco_RECO_PAT.py"
+tag="_prompt_ZB" # label and/or hlt filter
+config="recorawPr_RAW2DIGI_L1Reco_RECO_PAT_ZB.py"
 
 INPUTS=(
-    # list/PhysicsSpecialHLTPhysics0_398683.txt
-    # list/PhysicsSpecialZeroBias2_398683.txt
-    list/PhysicsVRZeroBias7_398861.txt
+    list/PhysicsHIPhysicsRawPrime0_399766.txt
+    list/PhysicsHIPhysicsRawPrime10_399766.txt
 )
 
 # 
 OUTPUTPRIDIR="/eos/cms/store/group/phys_heavyions/wangj/RECO2025PbPb/"
-WORKDIR="$PWD"
+WORKDIR="../"
 
-#
-mkdir -p $WORKDIR
+#### Don't change below ####
+
+numEvents=$(grep "input = cms" $config) ; echo $numEvents ;
+[[ $numEvents == *-1* ]] || { echo -e "\e[31merror: Change nevents to -1 before submission. exit.\e[0m" ; exit 2; }
 
 for INPUTDIR in "${INPUTS[@]}"
 do
@@ -50,7 +51,7 @@ do
 
     ##
     OUTPUTDIR="${OUTPUTPRIDIR}/${OUTPUTSUBDIR}"
-    LOGDIR="logs/log_${OUTPUTSUBDIR}"
+    LOGDIR="$WORKDIR/logs/log_${OUTPUTSUBDIR}"
 
     echo "$OUTPUTDIR"
     ##

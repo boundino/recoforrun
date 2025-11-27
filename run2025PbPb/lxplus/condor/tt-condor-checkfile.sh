@@ -20,9 +20,9 @@ tag="reco"
 
 set -x
 DEST_CONDOR=${DESTINATION}
-DEST_MUON=${DESTINATION%%/}_muon
+# DEST_SECONDARY=${DESTINATION%%/}_muon
 
-mkdir -p $DESTINATION $LOGDIR # $DEST_MUON
+mkdir -p $DESTINATION $LOGDIR # $DEST_SECONDARY
 
 set +x
 
@@ -47,7 +47,7 @@ Universe     = vanilla
 Initialdir   = $PWD/
 Notification = Error
 Executable   = $PWD/tt-${tag}-checkfile.sh
-Arguments    = $inputname $DEST_CONDOR ${outputfile} $PYCONFIG $CMSSW_VERSION $DEST_MUON
+Arguments    = $inputname $DEST_CONDOR ${outputfile} $PYCONFIG $CMSSW_VERSION $DEST_SECONDARY
 Output       = $LOGDIR/log-${infn}.out
 Error        = $LOGDIR/log-${infn}.err
 Log          = $LOGDIR/log-${infn}.log
